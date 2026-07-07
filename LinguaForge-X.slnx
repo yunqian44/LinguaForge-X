@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LinguaForge-X.Application/LinguaForge-X.Application.csproj" />
+    <Project Path="src/LinguaForge-X.Domain/LinguaForge-X.Domain.csproj" />
+    <Project Path="src/LinguaForge-X.Infrastructure/LinguaForge-X.Infrastructure.csproj" />
+    <Project Path="src/LinguaForge-X.Presentation.Wpf/LinguaForge-X.Presentation.Wpf.csproj" />
+  </Folder>
+</Solution>

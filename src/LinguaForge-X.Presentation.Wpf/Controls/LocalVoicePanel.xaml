@@ -1,0 +1,51 @@
+<UserControl x:Class="LinguaForge_X.Presentation.Wpf.Controls.LocalVoicePanel"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,18,0,0"><StackPanel>
+  <Border Style="{DynamicResource Card}" Margin="0,0,0,18"><StackPanel>
+   <TextBlock Text="01  本地 GPT-SoVITS 环境" Style="{DynamicResource SectionTitle}"/>
+   <TextBlock Text="本人录音、训练和中文配音在本机处理。请先安装 GPT-SoVITS 及其预训练模型，再配置下方目录；视频识别和翻译仍使用服务设置中的服务。" TextWrapping="Wrap" Foreground="#55627A" Margin="0,0,0,10"/>
+   <Button Content="打开安装与训练说明" Command="{Binding OpenLocalVoiceGuideCommand}" HorizontalAlignment="Left" Margin="0,0,0,16"/>
+   <Grid IsEnabled="{Binding IsIdle}"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition/></Grid.ColumnDefinitions><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <StackPanel Margin="0,0,0,14"><TextBlock Text="GPT-SoVITS 安装目录（包含 api_v2.py）" Style="{DynamicResource FieldLabel}"/><DockPanel><Button Content="浏览" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="root" Margin="8,0,0,0"/><TextBox Text="{Binding LocalVoiceSettings.RootDirectory, UpdateSourceTrigger=PropertyChanged}"/></DockPanel></StackPanel>
+    <StackPanel Grid.Column="2" Margin="0,0,0,14"><TextBlock Text="Python 解释器（可使用安装包的 runtime/python.exe）" Style="{DynamicResource FieldLabel}"/><DockPanel><Button Content="浏览" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="python" Margin="8,0,0,0"/><TextBox Text="{Binding LocalVoiceSettings.PythonPath, UpdateSourceTrigger=PropertyChanged}"/></DockPanel></StackPanel>
+    <StackPanel Grid.Row="1"><TextBlock Text="本机 API 地址" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding LocalVoiceSettings.ApiEndpoint, UpdateSourceTrigger=PropertyChanged}" ToolTip="只允许本机地址，例如 http://127.0.0.1:9880"/></StackPanel>
+    <StackPanel Grid.Row="1" Grid.Column="2"><TextBlock Text="推理设备" Style="{DynamicResource FieldLabel}"/><ComboBox ItemsSource="{Binding LocalVoiceDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding LocalVoiceSettings.Device}"/></StackPanel>
+   </Grid>
+   <WrapPanel Margin="0,16,0,0"><Button Content="保存环境配置" Command="{Binding SaveLocalVoiceSettingsCommand}" Margin="0,0,10,8"/><Button Content="检查服务连接" Command="{Binding CheckLocalVoiceCommand}" Margin="0,0,10,8"/><Button Content="启动本地服务" Command="{Binding StartLocalVoiceCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,10,8"/><Button Content="停止本项目启动的服务" Command="{Binding StopLocalVoiceCommand}" Margin="0,0,0,8"/></WrapPanel>
+   <TextBlock x:Name="LocalVoiceStatusText" Text="{Binding LocalVoiceStatus}" TextWrapping="Wrap" Foreground="#385389" Margin="0,4,0,0"/>
+  </StackPanel></Border>
+  <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="6*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="4*"/></Grid.ColumnDefinitions>
+   <Border Style="{DynamicResource Card}"><StackPanel>
+    <TextBlock Text="02  添加本人音色" Style="{DynamicResource SectionTitle}"/>
+    <StackPanel IsEnabled="{Binding IsIdle}">
+     <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition Width="180"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="音色名称" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding LocalVoiceDraft.Name, UpdateSourceTrigger=PropertyChanged}"/></StackPanel><StackPanel Grid.Column="2"><TextBlock Text="参考录音语言" Style="{DynamicResource FieldLabel}"/><ComboBox ItemsSource="{Binding LocalReferenceLanguages}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding LocalVoiceDraft.Language}"/></StackPanel></Grid>
+     <TextBlock Text="本人参考录音（3–10 秒 WAV，清晰单人声音）" Style="{DynamicResource FieldLabel}" Margin="0,14,0,6"/><DockPanel><Button Content="导入录音" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="reference" Margin="8,0,0,0"/><TextBox Text="{Binding LocalVoiceDraft.ReferenceAudioPath, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+     <TextBlock Text="录音中实际说出的文字（请逐字校对）" Style="{DynamicResource FieldLabel}" Margin="0,14,0,6"/><TextBox Text="{Binding LocalVoiceDraft.ReferenceText, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" Height="90" VerticalScrollBarVisibility="Auto"/>
+     <TextBlock Text="短录音可直接创建参考音色；它不会自动训练个人模型。首次合成使用安装包的基础模型，效果请以试听为准。" TextWrapping="Wrap" Foreground="#718096" FontSize="12" Margin="0,10,0,14"/>
+     <Expander Header="可选：导入已经训练好的模型（GPT 与 SoVITS 必须成对）"><StackPanel Margin="0,12,0,0">
+      <TextBlock Text="GPT 模型（.ckpt）" Style="{DynamicResource FieldLabel}"/><DockPanel><Button Content="选择" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="gpt" Margin="8,0,0,0"/><TextBox Text="{Binding LocalVoiceDraft.GptWeightsPath, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+      <TextBlock Text="SoVITS 模型（.pth）" Style="{DynamicResource FieldLabel}" Margin="0,12,0,6"/><DockPanel><Button Content="选择" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="sovits" Margin="8,0,0,0"/><TextBox Text="{Binding LocalVoiceDraft.SoVitsWeightsPath, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+     </StackPanel></Expander>
+    </StackPanel>
+    <WrapPanel Margin="0,18,0,0"><Button Content="保存为新音色" Command="{Binding SaveLocalVoiceCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,10,0"/><Button Content="清空表单" Command="{Binding NewLocalVoiceCommand}"/></WrapPanel>
+   </StackPanel></Border>
+   <Border Grid.Column="2" Style="{DynamicResource Card}"><StackPanel>
+    <DockPanel><Button DockPanel.Dock="Right" Content="刷新" Command="{Binding RefreshLocalVoicesCommand}"/><TextBlock Text="我的声音" Style="{DynamicResource SectionTitle}" Margin="0,0,12,0" VerticalAlignment="Center"/></DockPanel>
+    <ListBox x:Name="LocalVoiceList" ItemsSource="{Binding LocalVoices}" SelectedItem="{Binding SelectedLocalVoice}" Height="260" Margin="0,16,0,12" BorderBrush="#DFE5EF" IsEnabled="{Binding IsIdle}" HorizontalContentAlignment="Stretch"><ListBox.ItemTemplate><DataTemplate><StackPanel Margin="8"><TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding Description}" Foreground="#718096" FontSize="12" Margin="0,5,0,0"/><TextBlock Text="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm}" Foreground="#718096" FontSize="11" Margin="0,3,0,0"/></StackPanel></DataTemplate></ListBox.ItemTemplate></ListBox>
+    <WrapPanel><Button Content="中文试听" Command="{Binding PreviewLocalVoiceCommand}" Margin="0,0,10,8"/><Button Content="用于视频配音" Command="{Binding UseLocalVoiceCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,0,8"/></WrapPanel>
+    <TextBlock Text="点击「用于视频配音」会保存本地配音服务选择。之后可在视频转换页切换音色并导出；已校对好的字幕与配音稿可继续使用。" TextWrapping="Wrap" Foreground="#718096" FontSize="12" Margin="0,6,0,0"/>
+   </StackPanel></Border>
+  </Grid>
+  <Border x:Name="LocalTrainingCard" Style="{DynamicResource Card}" Margin="0,18,0,0"><StackPanel>
+   <TextBlock Text="03  用更多本人录音训练模型" Style="{DynamicResource SectionTitle}"/>
+   <TextBlock Text="使用切分好的本人录音和已校对文稿进行 GPT 与 SoVITS 微调。训练会生成模型文件，完成后自动加入「我的声音」。训练前请填写上方音色名称和用于试听的参考录音。" TextWrapping="Wrap" Foreground="#55627A" Margin="0,0,0,14"/>
+   <StackPanel IsEnabled="{Binding IsIdle}">
+    <TextBlock Text="训练清单（.list）" Style="{DynamicResource FieldLabel}"/><DockPanel><Button Content="选择清单" DockPanel.Dock="Right" Command="{Binding BrowseLocalVoiceCommand}" CommandParameter="dataset" Margin="8,0,0,0"/><TextBox Text="{Binding LocalDatasetPath, UpdateSourceTrigger=PropertyChanged}"/></DockPanel>
+    <TextBlock Text="每行格式：音频绝对路径|说话人名称|语言|准确文稿，例如 C:\voice\001.wav|本人|zh|你好，欢迎观看视频。" TextWrapping="Wrap" Foreground="#718096" FontSize="12" Margin="0,8,0,12"/>
+    <WrapPanel><TextBlock Text="GPT 训练轮数" VerticalAlignment="Center" Margin="0,0,10,0"/><TextBox Width="70" Text="{Binding LocalGptEpochs, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" Margin="0,0,24,0"/><TextBlock Text="SoVITS 训练轮数" VerticalAlignment="Center" Margin="0,0,10,0"/><TextBox Width="70" Text="{Binding LocalSoVitsEpochs, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}"/></WrapPanel>
+   </StackPanel>
+   <TextBlock Text="训练需要完整的训练依赖与预训练模型。CPU 可以运行，兼容的 NVIDIA 显卡可加速；训练和长视频配音的效率以实际硬件测试为准。接口检测通过不代表训练环境已就绪。" TextWrapping="Wrap" Foreground="#8B6526" FontSize="12" Margin="0,12,0,14"/>
+   <WrapPanel><Button Content="开始本地训练" Command="{Binding TrainLocalVoiceCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,10,0"/><Button Content="取消训练" Command="{Binding CancelLocalVoiceTrainingCommand}"/></WrapPanel>
+  </StackPanel></Border>
+ </StackPanel></ScrollViewer>
+</UserControl>

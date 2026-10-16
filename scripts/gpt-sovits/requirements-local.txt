@@ -1,0 +1,41 @@
+# GPT-SoVITS v2 training and api_v2 subset, based on the pinned upstream requirements.
+# CPU torch/torchaudio are installed separately from PyTorch's official index.
+torch==2.6.0
+torchaudio==2.6.0
+numpy==1.26.4
+scipy
+tensorboard
+librosa==0.10.2
+numba
+pytorch-lightning>=2.4,<3
+ffmpeg-python
+tqdm
+cn2an
+pypinyin
+# Windows wheels provide the same pyopenjtalk module without installing C++ build tools.
+pyopenjtalk-plus==0.4.1.post9
+g2p_en
+sentencepiece
+transformers>=4.51,<5
+peft<0.18.0
+chardet
+PyYAML
+psutil
+# Setup installs a tiny jieba_fast API adapter over upstream pure-Python jieba.
+jieba
+split-lang
+fast_langdetect>=0.3.1
+wordsegment
+rotary_embedding_torch
+ToJyutping
+g2pk2
+ko_pron
+opencc
+fastapi[standard]>=0.115.2
+x_transformers
+torchmetrics<=1.5
+pydantic<=2.10.6
+soundfile
+onnxruntime
+matplotlib<4
+resampy

@@ -5,6 +5,9 @@
 
 # dotenv files
 .env
+.env.*
+!.env.example
+!.env.template
 
 # User-specific files
 *.rsuser
@@ -484,5 +487,29 @@ $RECYCLE.BIN/
 /Upload
 
 # Local settings contain encrypted credentials; keep the demo tracked.
-/settings.json
-/settings.json.*
+settings.json
+settings.json.*
+!/.vscode/settings.json
+!/.axoCover/settings.json
+
+# Local voice environments and downloaded/trained model weights
+.venv/
+venv/
+*.ckpt
+*.pth
+*.pt
+*.onnx
+*.safetensors
+
+# Local recordings, conversion jobs and browser credentials
+/recordings/
+/training-data/
+/models/
+/local-voices/
+/downloads/
+/jobs/
+/preview/
+/website-sessions/
+/verification-browser/
+*[Cc]ookies*.txt
+*.cookies.json

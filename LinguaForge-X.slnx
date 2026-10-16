@@ -5,4 +5,7 @@
     <Project Path="src/LinguaForge-X.Infrastructure/LinguaForge-X.Infrastructure.csproj" />
     <Project Path="src/LinguaForge-X.Presentation.Wpf/LinguaForge-X.Presentation.Wpf.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LinguaForge-X.Tests/LinguaForge-X.Tests.csproj" />
+  </Folder>
 </Solution>

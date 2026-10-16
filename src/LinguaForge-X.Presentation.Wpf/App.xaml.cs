@@ -1,5 +1,6 @@
 ﻿using LinguaForge_X.Application;
 using LinguaForge_X.Infrastructure;
+using LinguaForge_X.Presentation.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
@@ -19,6 +20,7 @@ public partial class App : WpfApplication
                 services
                     .AddApplication()
                     .AddInfrastructure()
+                    .AddSingleton<MainViewModel>()
                     .AddSingleton<MainWindow>();
             })
             .Build();
@@ -26,18 +28,28 @@ public partial class App : WpfApplication
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        await _host.StartAsync();
-
-        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-        mainWindow.Show();
-
         base.OnStartup(e);
+        try
+        {
+            await _host.StartAsync();
+            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+            MainWindow = mainWindow;
+            mainWindow.Show();
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("应用启动失败，请检查本地安装和配置文件。", "LinguaForge-X", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown(1);
+        }
     }
 
-    protected override async void OnExit(ExitEventArgs e)
+    protected override void OnExit(ExitEventArgs e)
     {
-        await _host.StopAsync();
-        _host.Dispose();
-        base.OnExit(e);
+        try { _host.StopAsync(TimeSpan.FromSeconds(3)).GetAwaiter().GetResult(); }
+        finally
+        {
+            _host.Dispose();
+            base.OnExit(e);
+        }
     }
 }

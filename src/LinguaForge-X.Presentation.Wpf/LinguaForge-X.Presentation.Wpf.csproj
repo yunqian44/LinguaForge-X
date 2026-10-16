@@ -18,4 +18,32 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup Condition="Exists('..\..\settings.json')">
+    <Content Include="..\..\settings.json" Link="settings.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\scripts\gpt-sovits\*.py;..\..\scripts\gpt-sovits\*.ps1;..\..\scripts\gpt-sovits\*.json;..\..\scripts\gpt-sovits\*.txt;..\..\scripts\gpt-sovits\README.md" Exclude="..\..\scripts\gpt-sovits\test_*.py" Link="tools\gpt-sovits\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\bin\ffmpeg.exe')">
+    <Content Include="..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\bin\ffmpeg.exe" Link="tools\ffmpeg.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\bin\ffprobe.exe" Link="tools\ffprobe.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\LICENSE" Link="tools\FFmpeg-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\README.txt" Link="tools\FFmpeg-README.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('..\..\artifacts\media-tools\ffmpeg-9.0.2-essentials_build\README.txt')" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('..\..\artifacts\online-tools\yt-dlp.exe')">
+    <Content Include="..\..\artifacts\online-tools\yt-dlp.exe" Link="tools\yt-dlp.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\online-tools\yt-dlp-LICENSE.txt" Link="tools\yt-dlp-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\online-tools\yt-dlp-THIRD-PARTY-LICENSES.txt" Link="tools\yt-dlp-THIRD-PARTY-LICENSES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('..\..\artifacts\online-tools\deno.exe')">
+    <Content Include="..\..\artifacts\online-tools\deno.exe" Link="tools\deno.exe" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\artifacts\online-tools\Deno-*.txt" Link="tools\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

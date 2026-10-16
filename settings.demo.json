@@ -2,7 +2,9 @@
   "_说明": [
     "此文件仅提供配置结构与字段说明，不包含真实服务地址、密钥或个人目录。",
     "settings.demo.json 提交到 Git；项目根目录 settings.json 及其备份仅保留本地，由 .gitignore 忽略。",
-    "程序实际读取 %LOCALAPPDATA%\\LinguaForge-X\\settings.json；项目根目录 settings.json 是本地副本，不会自动加载。",
+    "编译和发布时会将项目根目录 settings.json 复制到 EXE 所在目录；程序仅从 EXE 同目录读取和保存此文件，不再读取用户目录中的旧配置。",
+    "每次编译或发布都会以项目根目录配置覆盖输出目录中的 settings.json；如需保留程序内保存的修改，请先将 EXE 同目录的文件同步回项目根目录。",
+    "项目根目录没有 settings.json 时仍可编译；运行时缺少配置会使用默认值，在界面保存后创建 EXE 同目录的 settings.json。程序目录需要有写入权限。",
     "请在程序的「服务设置」填写 Azure 配置，点击「保存设置并刷新」；本地音色在「我的声音」配置。",
     "ApiKey 和 OnlineVideo.Proxy 在落盘时由 Windows 当前用户使用 DPAPI 加密。示例留空；不要向文件直接填入明文密钥或自行拼接 dpapi: 前缀。",
     "复制真实 settings.json 时保留全部原始内容。密文通常只能在原 Windows 用户及原环境中解密。"

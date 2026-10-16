@@ -1,0 +1,28 @@
+<UserControl x:Class="LinguaForge_X.Presentation.Wpf.Controls.ServiceSettingsEditor"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="clr-namespace:LinguaForge_X.Presentation.Wpf.Controls"
+ xmlns:models="clr-namespace:LinguaForge_X.Domain.Models;assembly=LinguaForge-X.Domain">
+ <Grid>
+  <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Grid.ColumnSpan="3" Margin="0,0,0,12"><TextBlock Text="服务类型" Style="{DynamicResource FieldLabel}"/><ComboBox x:Name="ProviderSelector" ItemsSource="{x:Static local:ServiceSettingsEditor.Providers}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Provider, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+  <StackPanel Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3">
+   <StackPanel.Style><Style TargetType="StackPanel"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding SelectedValue, ElementName=ProviderSelector}" Value="{x:Static models:ServiceProviderKind.LocalGptSoVits}"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></StackPanel.Style>
+   <TextBlock Text="本地 GPT-SoVITS 无需 Azure 密钥。请前往「我的声音」配置安装目录、启动本地服务，并保存或训练本人音色。" TextWrapping="Wrap" Foreground="#385389" Margin="0,0,0,12"/>
+   <TextBlock Text="本地 API 地址" Style="{DynamicResource FieldLabel}"/><TextBlock Text="{Binding LocalVoice.ApiEndpoint}" TextWrapping="Wrap"/>
+   <TextBlock Text="保存后，视频转换页将显示本机已保存的音色。" TextWrapping="Wrap" Foreground="#718096" Margin="0,12,0,0"/>
+  </StackPanel>
+  <Grid Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="3">
+   <Grid.Style><Style TargetType="Grid"><Style.Triggers><DataTrigger Binding="{Binding SelectedValue, ElementName=ProviderSelector}" Value="{x:Static models:ServiceProviderKind.LocalGptSoVits}"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+   <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="16"/><ColumnDefinition/></Grid.ColumnDefinitions>
+   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,0,12"><TextBlock Text="服务链接（HTTPS Endpoint）" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding Endpoint, UpdateSourceTrigger=PropertyChanged}" ToolTip="例如 https://资源名.openai.azure.com；Speech 可填写区域服务地址"/></StackPanel>
+  <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,0,12"><TextBlock Text="Access Key" Style="{DynamicResource FieldLabel}"/><PasswordBox local:PasswordBinding.Enabled="True" local:PasswordBinding.Password="{Binding ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="保存时由 Windows 当前用户加密保护"/></StackPanel>
+  <StackPanel Grid.Row="3" Margin="0,0,0,12"><TextBlock Text="区域（Speech）" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding Region, UpdateSourceTrigger=PropertyChanged}" ToolTip="例如 eastus"/></StackPanel>
+  <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,0,0,12"><TextBlock Text="部署名称（OpenAI）" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding Deployment, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+  <StackPanel Grid.Row="4"><TextBlock Text="模型名称" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding Model, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+  <StackPanel Grid.Row="4" Grid.Column="2"><TextBlock Text="API 版本" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding ApiVersion, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+  </Grid>
+ </Grid>
+</UserControl>

@@ -1,0 +1,100 @@
+{
+  "_说明": [
+    "此文件仅提供配置结构与字段说明，不包含真实服务地址、密钥或个人目录。",
+    "settings.demo.json 提交到 Git；项目根目录 settings.json 及其备份仅保留本地，由 .gitignore 忽略。",
+    "程序实际读取 %LOCALAPPDATA%\\LinguaForge-X\\settings.json；项目根目录 settings.json 是本地副本，不会自动加载。",
+    "请在程序的「服务设置」填写 Azure 配置，点击「保存设置并刷新」；本地音色在「我的声音」配置。",
+    "ApiKey 和 OnlineVideo.Proxy 在落盘时由 Windows 当前用户使用 DPAPI 加密。示例留空；不要向文件直接填入明文密钥或自行拼接 dpapi: 前缀。",
+    "复制真实 settings.json 时保留全部原始内容。密文通常只能在原 Windows 用户及原环境中解密。"
+  ],
+  "_字段说明": {
+    "Version": "配置格式版本，当前固定为数字 1。",
+    "Settings.Transcription": "语音转文字服务。Azure OpenAI 字幕转写使用已部署的 whisper 模型。",
+    "Settings.Translation": "文本翻译服务，Provider 填 0，Deployment 填 Azure OpenAI 文本模型的实际部署名称。",
+    "Settings.Synthesis": "文字转语音服务。当前示例使用本地 GPT-SoVITS（Provider = 2）；如使用 Azure 配音，在界面切换服务类型并配置对应资源。",
+    "Settings.<服务>.Provider": "整数：0 = Azure OpenAI；1 = Azure AI Speech；2 = 本地 GPT-SoVITS（仅 Synthesis 支持）。",
+    "Settings.<服务>.Endpoint": "Azure 资源的 HTTPS 终结点，例如 https://<资源名>.openai.azure.com；Speech 可填区域服务地址，或留空由 Region 生成。本地配音使用 LocalVoice.ApiEndpoint。",
+    "Settings.<服务>.ApiKey": "对应 Azure 资源的访问密钥。通过界面的 Access Key 输入，由程序保存为 dpapi: 密文；未配置或仅使用本地服务可留空。",
+    "Settings.<服务>.Region": "Azure AI Speech 资源的区域标识，例如 eastus；Azure OpenAI 或本地服务通常留空。",
+    "Settings.<服务>.Deployment": "Azure OpenAI 资源内实际创建的部署名称，不一定等于模型名称；Speech 或本地服务留空。",
+    "Settings.<服务>.ApiVersion": "与项目接口和 Azure 部署兼容的 API 版本；示例采用项目默认值 2024-10-21。",
+    "Settings.<服务>.Model": "模型标识：OpenAI 转写使用 whisper；文本翻译按项目填写 text；OpenAI 配音按实际部署填写 tts-1 等模型名称。",
+    "Settings.<服务>.LocalVoice": "本地 GPT-SoVITS 配置，仅当 Synthesis.Provider = 2 时使用。",
+    "Settings.<服务>.LocalVoice.RootDirectory": "本机 GPT-SoVITS 源码根目录的绝对路径，目录中应存在 api_v2.py 和模型文件。",
+    "Settings.<服务>.LocalVoice.PythonPath": "安装了 GPT-SoVITS 依赖的 Python 可执行文件绝对路径，通常为独立虚拟环境的 Scripts\\python.exe。",
+    "Settings.<服务>.LocalVoice.ApiEndpoint": "本机 HTTP API 地址，默认 http://127.0.0.1:9880；只允许回环地址。",
+    "Settings.<服务>.LocalVoice.Device": "auto = 自动选择；cpu = 使用 CPU；cuda = 使用可用的 NVIDIA CUDA 显卡。",
+    "Settings.Media.FfmpegPath": "ffmpeg.exe 的完整路径；若在 PATH 中或程序包含该工具，可保留 ffmpeg。",
+    "Settings.Media.FfprobePath": "ffprobe.exe 的完整路径；若在 PATH 中或程序包含该工具，可保留 ffprobe。",
+    "Settings.Media.OutputDirectory": "视频默认导出目录的绝对路径；留空时本地视频使用源文件目录，在线视频优先使用用户 Videos\\LinguaForge-X 目录。",
+    "Settings.Media.VideoEncoding": "整数：0 = 自动选择；1 = CPU 快速编码；2 = CPU 质量优先编码。",
+    "Settings.Media.OutputQuality": "整数：0 = 源分辨率；1 = 2160p；2 = 1080p；3 = 720p；4 = 480p。输出不超过源视频分辨率。",
+    "Settings.OnlineVideo.DownloaderPath": "yt-dlp.exe 的完整路径，或可从 PATH/随程序工具目录找到的 yt-dlp。",
+    "Settings.OnlineVideo.JavaScriptRuntimePath": "deno.exe 的完整路径，或可从 PATH/随程序工具目录找到的 deno。",
+    "Settings.OnlineVideo.DownloadDirectory": "在线视频下载目录的绝对路径；留空使用 %LOCALAPPDATA%\\LinguaForge-X\\downloads。",
+    "Settings.OnlineVideo.Proxy": "下载代理地址，在界面填写；落盘时整体保存为 dpapi: 密文。留空表示不显式覆盖代理，下载工具仍可能使用系统或环境代理。",
+    "Settings.OnlineVideo.CookiesFilePath": "本人从浏览器导出的 Netscape 格式 Cookie 文件绝对路径；无需手动 Cookie 时留空。配置仅保存文件路径。"
+  },
+  "Version": 1,
+  "Settings": {
+    "Transcription": {
+      "Provider": 0,
+      "Endpoint": "",
+      "ApiKey": "",
+      "Region": "",
+      "Deployment": "",
+      "ApiVersion": "2024-10-21",
+      "Model": "whisper",
+      "LocalVoice": {
+        "RootDirectory": "",
+        "PythonPath": "python",
+        "ApiEndpoint": "http://127.0.0.1:9880",
+        "Device": "auto"
+      }
+    },
+    "Translation": {
+      "Provider": 0,
+      "Endpoint": "",
+      "ApiKey": "",
+      "Region": "",
+      "Deployment": "",
+      "ApiVersion": "2024-10-21",
+      "Model": "text",
+      "LocalVoice": {
+        "RootDirectory": "",
+        "PythonPath": "python",
+        "ApiEndpoint": "http://127.0.0.1:9880",
+        "Device": "auto"
+      }
+    },
+    "Synthesis": {
+      "Provider": 2,
+      "Endpoint": "",
+      "ApiKey": "",
+      "Region": "",
+      "Deployment": "",
+      "ApiVersion": "2024-10-21",
+      "Model": "tts-1",
+      "LocalVoice": {
+        "RootDirectory": "",
+        "PythonPath": "python",
+        "ApiEndpoint": "http://127.0.0.1:9880",
+        "Device": "auto"
+      }
+    },
+    "Media": {
+      "FfmpegPath": "ffmpeg",
+      "FfprobePath": "ffprobe",
+      "OutputDirectory": "",
+      "VideoEncoding": 0,
+      "OutputQuality": 0
+    },
+    "OnlineVideo": {
+      "DownloaderPath": "yt-dlp",
+      "JavaScriptRuntimePath": "deno",
+      "DownloadDirectory": "",
+      "Proxy": "",
+      "CookiesFilePath": ""
+    }
+  }
+}

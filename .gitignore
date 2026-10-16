@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 *.swp
 /.github/copilot-instructions.md
 /Upload
+
+# Local settings contain encrypted credentials; keep the demo tracked.
+/settings.json
+/settings.json.*

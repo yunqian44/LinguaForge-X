@@ -103,7 +103,9 @@ def train(manifest: dict) -> dict:
     validate_rows(text_parts, names)
     shutil.copyfile(text_parts, dataset / "2-name2text.txt")
     progress("audio_features", 0.20, "提取录音特征并转换为 32 kHz 音频。")
-    run_upstream(root, "GPT_SoVITS/prepare_datasets/2-get-hubert-wav32k.py", [], env)
+    audio_stage = (str(Path(__file__).resolve().with_name("cpu_audio_features.py")) if device == "cpu"
+                   else "GPT_SoVITS/prepare_datasets/2-get-hubert-wav32k.py")
+    run_upstream(root, audio_stage, [], env)
     for name in names:
         required_file(dataset / "4-cnhubert" / (name + ".pt"))
         wav_path = required_file(dataset / "5-wav32k" / name)
@@ -145,10 +147,17 @@ def train(manifest: dict) -> dict:
                "output_dir": str(dataset / "logs_s1_v2")})
     s1_path = output / "s1.yaml"
     s1_path.write_text(yaml.safe_dump(s1, allow_unicode=True), encoding="utf-8")
+    def run_trainer(stage, option, config):
+        args = [option, str(config)]
+        if device == "cpu":
+            run_upstream(root, str(Path(__file__).resolve().with_name("cpu_train.py")), [stage, *args], env)
+        else:
+            run_upstream(root, "GPT_SoVITS/" + stage, args, env)
+
     progress("train_sovits", 0.45, f"开始 SoVITS 微调，共 {sovits_epochs} 轮；具体轮次见训练日志。")
-    run_upstream(root, "GPT_SoVITS/s2_train.py", ["--config", str(s2_path)], env)
+    run_trainer("s2_train.py", "--config", s2_path)
     progress("train_gpt", 0.72, f"开始 GPT 微调，共 {gpt_epochs} 轮；具体轮次见训练日志。")
-    run_upstream(root, "GPT_SoVITS/s1_train.py", ["--config_file", str(s1_path)], env)
+    run_trainer("s1_train.py", "--config_file", s1_path)
     sovits_models = sorted(sovits_dir.glob("*.pth"), key=lambda item: item.stat().st_mtime_ns)
     gpt_models = sorted(gpt_dir.glob("*.ckpt"), key=lambda item: item.stat().st_mtime_ns)
     if not sovits_models or not gpt_models:

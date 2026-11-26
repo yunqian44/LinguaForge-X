@@ -42,3 +42,12 @@ The local voice adapter communicates with the official GPT-SoVITS `api_v2.py` ru
 - Runtime preparation and model provenance: `scripts/gpt-sovits/README.md` and its setup manifest.
 
 The top-level source license does not replace the individual licenses for pretrained models and Python dependencies. Keep their accompanying notices when redistributing a prepared runtime. User recordings and trained voice models are local user data.
+
+## Embedded training browser
+
+The WPF training window uses the Microsoft.Web.WebView2 NuGet SDK (version 1.0.4258.31) and an installed Microsoft Edge WebView2 Runtime. Their Microsoft license terms apply. The application does not redistribute the browser runtime; the SDK loader assemblies are included by the NuGet build targets.
+
+- SDK and license: https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.4258.31
+- Runtime distribution: https://developer.microsoft.com/microsoft-edge/webview2/
+
+The embedded page is the separately installed upstream GPT-SoVITS Gradio WebUI. Its Python dependencies and model licenses remain separate from the WPF application's dependencies.

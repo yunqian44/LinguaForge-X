@@ -64,8 +64,10 @@ public sealed partial class LocalVoiceService
                 }
             }, cancellationToken);
             _ownedProcess?.Dispose();
+            var cpuLauncher = Path.Combine(AppContext.BaseDirectory, "tools", "gpt-sovits", "cpu_inference.py");
+            var api = device == "cpu" && File.Exists(cpuLauncher) ? cpuLauncher : Path.Combine(root, "api_v2.py");
             _ownedProcess = new Process { StartInfo = PythonStart(settings, root,
-                ["-u", Path.Combine(root, "api_v2.py"), "-a", endpoint.Host.Trim('[', ']'), "-p", endpoint.Port.ToString(System.Globalization.CultureInfo.InvariantCulture), "-c", config]) };
+                ["-u", api, "-a", endpoint.Host.Trim('[', ']'), "-p", endpoint.Port.ToString(System.Globalization.CultureInfo.InvariantCulture), "-c", config]) };
             _serverLog.Clear();
             try { StartProcess(_ownedProcess); }
             catch

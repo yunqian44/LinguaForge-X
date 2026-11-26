@@ -57,6 +57,10 @@ def validate_runtime(root: Path, *, training: bool = False) -> None:
 def choose_device(requested: str) -> tuple[str, bool]:
     if requested not in {"auto", "cpu", "cuda"}:
         raise ValueError("device 只支持 auto、cpu、cuda。")
+    # A CPU-only launcher need not keep a second PyTorch runtime resident
+    # while its child loads the feature extractor or optimizer.
+    if requested == "cpu":
+        return "cpu", False
     try:
         import torch
     except ImportError as error:

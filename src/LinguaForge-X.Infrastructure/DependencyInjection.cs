@@ -4,6 +4,7 @@ using LinguaForge_X.Infrastructure.Media;
 using LinguaForge_X.Infrastructure.LocalVoice;
 using LinguaForge_X.Infrastructure.OnlineVideo;
 using LinguaForge_X.Infrastructure.Persistence;
+using LinguaForge_X.Infrastructure.Recording;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinguaForge_X.Infrastructure;
@@ -33,6 +34,8 @@ public static class DependencyInjection
         services.AddSingleton<AzureAiService>();
         services.AddSingleton(_ => new LocalVoiceService());
         services.AddSingleton<ILocalVoiceService>(provider => provider.GetRequiredService<LocalVoiceService>());
+        services.AddSingleton<IVoiceRecordingService>(_ => new VoiceRecordingService());
+        services.AddSingleton<ILocalVoiceTrainingWebUiService>(_ => new LocalVoiceTrainingWebUiService());
         services.AddSingleton<SynthesisRouter>();
         services.AddSingleton<ITranscriptionService>(provider => provider.GetRequiredService<AzureAiService>());
         services.AddSingleton<ITranslationService>(provider => provider.GetRequiredService<AzureAiService>());

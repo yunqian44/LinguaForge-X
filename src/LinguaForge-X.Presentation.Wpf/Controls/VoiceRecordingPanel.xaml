@@ -1,0 +1,56 @@
+<UserControl x:Class="LinguaForge_X.Presentation.Wpf.Controls.VoiceRecordingPanel"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Border Style="{DynamicResource Card}" Margin="0,0,0,18"><StackPanel>
+  <TextBlock Text="02  本人录音与校准" Style="{DynamicResource SectionTitle}"/>
+  <TextBlock Text="在本机录音、试听和校准，再作为参考音色或训练素材。录音不会上传云端；原始版本始终保留。参考音色建议 3–10 秒，训练素材每条最长录制 45 秒。" TextWrapping="Wrap" Foreground="#55627A" Margin="0,0,0,16"/>
+  <Border Background="#EEF4FD" CornerRadius="6" Padding="12" Margin="0,0,0,16"><TextBlock x:Name="RecordingStatusText" Text="{Binding RecordingStatus, Mode=OneWay}" TextWrapping="Wrap" Foreground="#385389"/></Border>
+  <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="3*"/><ColumnDefinition Width="18"/><ColumnDefinition Width="2*"/></Grid.ColumnDefinitions>
+   <StackPanel>
+    <TextBlock Text="01  选择麦克风并录制" FontWeight="SemiBold" Foreground="#24324D" Margin="0,0,0,12"/>
+    <DockPanel IsEnabled="{Binding CanEditRecording}"><Button Content="刷新设备与录音库" DockPanel.Dock="Right" Command="{Binding RefreshRecordingsCommand}" Margin="8,0,0,0"/><ComboBox x:Name="RecordingDevicePicker" ItemsSource="{Binding RecordingDevices}" SelectedItem="{Binding RecordingDevice}" DisplayMemberPath="Name" ToolTip="仅在点击开始录音后访问此麦克风"/></DockPanel>
+    <WrapPanel Margin="0,12,0,0"><Button x:Name="StartRecordingButton" Content="开始录音／重新录制" Command="{Binding StartRecordingCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,8,8"/><Button x:Name="StopRecordingButton" Content="停止并检查" Command="{Binding StopRecordingCommand}" Margin="0,0,8,8"/><Button Content="取消本次" Command="{Binding CancelRecordingCommand}" Margin="0,0,8,8"/><Button Content="导入本地 WAV" Command="{Binding ImportRecordingCommand}" Margin="0,0,0,8"/></WrapPanel>
+    <ProgressBar x:Name="RecordingLevelMeter" Value="{Binding RecordingLevel, Mode=OneWay}" Minimum="0" Maximum="100" Height="9" Foreground="#35A678" Background="#E8EDF4" Margin="0,4,0,6"/>
+    <TextBlock Text="{Binding RecordingMeter}" Foreground="#55627A" FontSize="12" TextWrapping="Wrap"/>
+    <TextBlock Text="音量条显示输入峰值；接近满格时请降低系统麦克风音量或稍微远离麦克风。重新录制成功后替换编辑中的版本，已保存的素材不受影响。" Foreground="#718096" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,14"/>
+    <Border Background="#F4F7FB" BorderBrush="#DFE5EF" BorderThickness="1" CornerRadius="6" Padding="12"><TextBlock x:Name="RecordingQualityText" Text="{Binding RecordingQuality}" TextWrapping="Wrap" Foreground="#385389" LineHeight="21"/></Border>
+    <WrapPanel Margin="0,12,0,16"><Button Content="试听原始录音" Command="{Binding PlayOriginalRecordingCommand}" Margin="0,0,8,8"/><Button Content="试听当前版本" Command="{Binding PlayRecordingCommand}" Margin="0,0,8,8"/><Button Content="停止试听" Command="{Binding StopRecordingPlaybackCommand}" Margin="0,0,0,8"/></WrapPanel>
+    <TextBlock Text="02  裁剪与音量校准" FontWeight="SemiBold" Foreground="#24324D" Margin="0,0,0,8"/>
+    <TextBlock Text="{Binding RecordingOriginalSummary}" TextWrapping="Wrap" Foreground="#718096" FontSize="12" Margin="0,0,0,10"/>
+    <StackPanel IsEnabled="{Binding CanEditRecording}">
+     <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="12"/><ColumnDefinition/><ColumnDefinition Width="12"/><ColumnDefinition/></Grid.ColumnDefinitions>
+      <StackPanel><TextBlock Text="开始（秒）" Style="{DynamicResource FieldLabel}"/><TextBox x:Name="RecordingTrimStart" Text="{Binding RecordingStart, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+      <StackPanel Grid.Column="2"><TextBlock Text="结束（秒）" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding RecordingEnd, UpdateSourceTrigger=PropertyChanged}"/></StackPanel>
+      <StackPanel Grid.Column="4"><TextBlock Text="增益（dB）" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding RecordingGain, UpdateSourceTrigger=PropertyChanged}" ToolTip="−24 至 +18 dB，0 表示不改变音量"/></StackPanel>
+     </Grid>
+     <CheckBox IsChecked="{Binding RecordingNormalize}" Margin="0,12,0,10"><TextBlock Text="自动调整峰值音量（仍需检查噪声与削波）" TextWrapping="Wrap"/></CheckBox>
+    </StackPanel>
+    <WrapPanel><Button Content="应用校准并检查" Command="{Binding CalibrateRecordingCommand}" Margin="0,0,8,8"/><Button Content="恢复原始版本" Command="{Binding RestoreOriginalRecordingCommand}" Margin="0,0,0,8"/></WrapPanel>
+    <TextBlock Text="{Binding RecordingCalibrationHint}" Foreground="#385389" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,4"/>
+    <TextBlock Text="裁剪后请同步修改文稿。增益不能修复已经录入的爆音、噪声或失真；不合格的片段建议重录。" Foreground="#8B6526" FontSize="12" TextWrapping="Wrap" Margin="0,4,0,0"/>
+   </StackPanel>
+   <StackPanel Grid.Column="2">
+    <TextBlock Text="03  校对文稿与保存" FontWeight="SemiBold" Foreground="#24324D" Margin="0,0,0,12"/>
+    <StackPanel IsEnabled="{Binding CanEditRecording}">
+     <TextBlock Text="录音名称" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding RecordingName, UpdateSourceTrigger=PropertyChanged}" MaxLength="80"/>
+     <Grid Margin="0,12,0,0"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="12"/><ColumnDefinition/></Grid.ColumnDefinitions>
+      <StackPanel><TextBlock Text="说话人名称" Style="{DynamicResource FieldLabel}"/><TextBox Text="{Binding RecordingSpeaker, UpdateSourceTrigger=PropertyChanged}" MaxLength="80" ToolTip="同一人的多条训练素材使用相同名称"/></StackPanel>
+      <StackPanel Grid.Column="2"><TextBlock Text="实际录音语言" Style="{DynamicResource FieldLabel}"/><ComboBox ItemsSource="{Binding LocalReferenceLanguages}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding RecordingLanguage}"/></StackPanel>
+     </Grid>
+     <TextBlock Text="当前版本实际说出的文字" Style="{DynamicResource FieldLabel}" Margin="0,12,0,6"/>
+     <TextBox x:Name="RecordingTranscript" Text="{Binding RecordingText, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" Height="116" MaxLength="1000" VerticalScrollBarVisibility="Auto"/>
+     <TextBlock Text="可先填写朗读稿再录音。文稿最多 1000 字，不含换行或竖线；与保留的音频逐字一致，不要包含未读出的提示或翻译。" Foreground="#718096" FontSize="12" TextWrapping="Wrap" Margin="0,8,0,10"/>
+     <CheckBox x:Name="RecordingReviewedCheck" IsChecked="{Binding RecordingReviewed}"><TextBlock Text="我已试听当前版本，并逐字校对文稿" TextWrapping="Wrap"/></CheckBox>
+    </StackPanel>
+    <WrapPanel Margin="0,14,0,8"><Button Content="保存到本机录音库" Command="{Binding SaveRecordingCommand}" Style="{DynamicResource PrimaryButton}" Margin="0,0,8,8"/><Button Content="当前录音用作参考音色" Command="{Binding UseRecordingAsReferenceCommand}" Margin="0,0,0,8"/></WrapPanel>
+    <TextBlock Text="只有音量与时长检查通过，且已校对文稿的录音才能保存。参考音色还需满足 3–10 秒；保存录音素材不会自动训练模型。" TextWrapping="Wrap" Foreground="#718096" FontSize="12" Margin="0,0,0,14"/>
+   </StackPanel>
+  </Grid>
+  <Expander x:Name="RecordingLibraryExpander" Header="本机录音库 · 勾选多段素材生成训练清单" Margin="0,18,0,0"><StackPanel Margin="0,12,0,0">
+    <ListBox x:Name="RecordingLibraryList" ItemsSource="{Binding RecordingSamples}" SelectedItem="{Binding SelectedRecording}" IsEnabled="{Binding CanEditRecording}" Height="185" HorizontalContentAlignment="Stretch" BorderBrush="#DFE5EF"><ListBox.ItemTemplate><DataTemplate>
+     <Grid Margin="4,7"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/></Grid.ColumnDefinitions><CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Top" Margin="0,2,10,0" ToolTip="勾选加入训练清单"/><StackPanel Grid.Column="1"><TextBlock Text="{Binding Sample.Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding Summary}" Foreground="#718096" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis"/><TextBlock Text="{Binding Sample.Text}" Foreground="#718096" FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,3,0,0"/></StackPanel></Grid>
+    </DataTemplate></ListBox.ItemTemplate></ListBox>
+    <TextBlock Text="{Binding RecordingSelectionSummary}" FontSize="12" Foreground="#718096" Margin="0,8,0,10"/>
+    <WrapPanel><Button Content="载入所选素材再校准" Command="{Binding LoadRecordingCommand}" Margin="0,0,8,8"/><Button Content="勾选素材 → 训练清单" Command="{Binding ExportRecordingDatasetCommand}" Margin="0,0,0,8"/></WrapPanel>
+  </StackPanel></Expander>
+ </StackPanel></Border>
+</UserControl>

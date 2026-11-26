@@ -31,7 +31,12 @@ ToJyutping
 g2pk2
 ko_pron
 opencc
-fastapi[standard]>=0.115.2
+# Gradio 4 uses Starlette's pre-1.0 template API; keep the tested web stack together.
+fastapi[standard]==0.115.14
+# Gradio 4 requires websockets<13; newer Uvicorn standard extras require >=13.
+uvicorn==0.34.3
+starlette==0.46.2
+gradio==4.44.1
 x_transformers
 torchmetrics<=1.5
 pydantic<=2.10.6

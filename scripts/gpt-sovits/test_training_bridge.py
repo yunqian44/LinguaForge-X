@@ -11,6 +11,7 @@ import wave
 
 import runtime_common
 import train_voice
+from cpu_train import make_cpu_loader
 
 
 class TrainingDatasetTests(unittest.TestCase):
@@ -89,6 +90,17 @@ class TrainingDatasetTests(unittest.TestCase):
         self.assertEqual("1", env["TRANSFORMERS_OFFLINE"])
         self.assertEqual("", env["CUDA_VISIBLE_DEVICES"])
 
+    def test_cpu_loader_drops_spawn_only_settings_but_keeps_sampler(self):
+        settings = make_cpu_loader(lambda dataset, **kwargs: kwargs, [0],
+                                   batch_sampler="bucket", num_workers=4,
+                                   pin_memory=True, persistent_workers=True, prefetch_factor=16)
+        self.assertEqual(settings, dict(batch_sampler="bucket", num_workers=0,
+                                        pin_memory=False, persistent_workers=False))
+
+    def test_explicit_cpu_launcher_needs_no_second_torch_runtime(self):
+        with patch.dict("sys.modules", {"torch": None}):
+            self.assertEqual(("cpu", False), runtime_common.choose_device("cpu"))
+
     def run_pipeline_fixture(self, duration=1):
         """Exercise orchestration against tiny fake upstream outputs, never real training."""
         runtime = self.root / "runtime"
@@ -106,7 +118,7 @@ class TrainingDatasetTests(unittest.TestCase):
             dataset.mkdir(exist_ok=True)
             if relative.endswith("1-get-text.py"):
                 (dataset / "2-name2text-0.txt").write_text(self.audio.name + "\tphones\n", encoding="utf-8")
-            elif relative.endswith("2-get-hubert-wav32k.py"):
+            elif relative.endswith("cpu_audio_features.py"):
                 (dataset / "4-cnhubert").mkdir()
                 (dataset / "5-wav32k").mkdir()
                 (dataset / "4-cnhubert" / (self.audio.name + ".pt")).write_bytes(b"fake feature")
@@ -117,12 +129,12 @@ class TrainingDatasetTests(unittest.TestCase):
                     wav.writeframes(b"\0\0" * int(32000 * duration))
             elif relative.endswith("3-get-semantic.py"):
                 (dataset / "6-name2semantic-0.tsv").write_text(self.audio.name + "\t1 2\n", encoding="utf-8")
-            elif relative.endswith("s2_train.py"):
+            elif relative.endswith("cpu_train.py") and arguments[0] == "s2_train.py":
                 # Real upstream does not create its checkpoint directory itself.
                 self.assertTrue((dataset / "logs_s2_v2").is_dir())
                 self.assertFalse((output / "result.json").exists())
                 (output / "SoVITS_weights_v2" / "fixture.pth").write_bytes(b"fake test artifact")
-            elif relative.endswith("s1_train.py"):
+            elif relative.endswith("cpu_train.py") and arguments[0] == "s1_train.py":
                 self.assertFalse((output / "result.json").exists())
                 (output / "GPT_weights_v2" / "fixture.ckpt").write_bytes(b"fake test artifact")
 

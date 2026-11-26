@@ -19,9 +19,9 @@ def main():
     sys.path.insert(0, str(root))
     os.environ["NLTK_DATA"] = str(root / "runtime" / "nltk_data")
     problems = []
-    for module in ("torch", "torchaudio", "pytorch_lightning", "transformers", "librosa", "soundfile",
+    for module in ("torch", "torchaudio", "pytorch_lightning", "transformers", "librosa", "soundfile", "soxr",
                    "yaml", "fastapi", "uvicorn", "pyopenjtalk", "jieba_fast", "opencc", "peft", "x_transformers",
-                   "matplotlib", "onnxruntime", "resampy"):
+                   "matplotlib", "onnxruntime", "resampy", "gradio", "gradio_client"):
         print("检查依赖：" + module, flush=True)
         try:
             importlib.import_module(module)

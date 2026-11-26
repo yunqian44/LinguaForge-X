@@ -16,7 +16,7 @@ using LinguaForge_X.Presentation.Wpf.Controls;
 using LinguaForge_X.Presentation.Wpf.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-internal static class Program
+internal static partial class Program
 {
     private static int _assertions;
     private static int _screenshots;
@@ -32,7 +32,12 @@ internal static class Program
         var result = 0;
         app.Dispatcher.InvokeAsync(async () =>
         {
-            try { await RunAsync(output, errors); }
+            try
+            {
+                if (args.Length == 4 && args[1] == "--live-training")
+                    await VerifyLiveTrainingBrowserAsync(output, args[2], args[3]);
+                else await RunAsync(output, errors);
+            }
             catch (Exception ex) { Console.Error.WriteLine(ex); result = 1; }
             finally { app.Shutdown(); }
         });
@@ -138,6 +143,9 @@ internal static class Program
         await VerifyAutoShortenWorkflowAsync(output);
         await VerifyVideoEncodingWorkflowAsync(output);
         await VerifyLocalVoiceWorkflowAsync(output);
+        await VerifyRecordingWorkflowAsync(output);
+        await VerifyTrainingWebUiWorkflowAsync(output);
+        await VerifyModularViewModelArchitectureAsync(output);
 
         stub.WithTranslation = true;
         vm.RefreshCapabilitiesCommand.Execute(null);
@@ -708,6 +716,7 @@ internal static class Program
 
     private sealed class StubLocalVoice : ILocalVoiceService
     {
+        public int StopCalls { get; private set; }
         public List<LocalVoiceProfile> Profiles { get; } = [];
         public TaskCompletionSource<LocalVoiceProfile>? TrainingResponse { get; set; }
         public Task<IReadOnlyList<LocalVoiceProfile>> ListAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<LocalVoiceProfile>>(Profiles.ToArray());
@@ -726,7 +735,11 @@ internal static class Program
         }
         public Task<ConnectionTestResult> CheckAsync(LocalVoiceSettings settings, CancellationToken cancellationToken = default) => Task.FromResult(new ConnectionTestResult(true, "模拟检测"));
         public Task<ConnectionTestResult> StartAsync(LocalVoiceSettings settings, CancellationToken cancellationToken = default) => Task.FromResult(new ConnectionTestResult(true, "模拟启动"));
-        public Task<ConnectionTestResult> StopAsync(CancellationToken cancellationToken = default) => Task.FromResult(new ConnectionTestResult(true, "模拟停止"));
+        public Task<ConnectionTestResult> StopAsync(CancellationToken cancellationToken = default)
+        {
+            StopCalls++;
+            return Task.FromResult(new ConnectionTestResult(true, "模拟停止"));
+        }
     }
 
     private sealed class StubVerification(VideoWebsite website, string proxy) : IWebsiteVerificationSession

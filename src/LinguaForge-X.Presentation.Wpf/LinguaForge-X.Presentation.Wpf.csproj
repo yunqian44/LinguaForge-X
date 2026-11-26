@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -25,6 +26,7 @@
   <ItemGroup>
     <Content Include="..\..\README.md" Link="README.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\scripts\gpt-sovits\*.py;..\..\scripts\gpt-sovits\*.ps1;..\..\scripts\gpt-sovits\*.json;..\..\scripts\gpt-sovits\*.txt;..\..\scripts\gpt-sovits\README.md" Exclude="..\..\scripts\gpt-sovits\test_*.py" Link="tools\gpt-sovits\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\..\scripts\gpt-sovits\training_webui_bootstrap\sitecustomize.py" Link="tools\gpt-sovits\training_webui_bootstrap\sitecustomize.py" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\..\THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 

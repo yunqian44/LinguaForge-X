@@ -31,7 +31,8 @@ def main() -> int:
                                        "bert_base_path": str(root / BERT_BASE),
                                        "cnhuhbert_base_path": str(root / HUBERT_BASE)}})
         print(f"本机 GPT-SoVITS： http://127.0.0.1:{args.port}，设备 {device}；正在载入模型。", flush=True)
-        run_upstream(root, "api_v2.py", ["-a", "127.0.0.1", "-p", str(args.port), "-c", str(config)],
+        api = str(Path(__file__).resolve().with_name("cpu_inference.py")) if device == "cpu" else "api_v2.py"
+        run_upstream(root, api, ["-a", "127.0.0.1", "-p", str(args.port), "-c", str(config)],
                      local_environment(root, device))
         return 0
     except Exception as error:
